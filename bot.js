@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const twit = require('twit');
 const config = require('./config.js');
 const predictions = [
@@ -12,12 +13,24 @@ const predictions = [
   'Uribe no vivirá por siempre, pero su legado vivirá mucho más que tú',
   'Millones han muerto; billones morirán'
 ];
+const hashtags = [
+  '#ChaosMagick',
+  '#CyberMagick',
+  '#DemonMagick',
+  '#Technomancy',
+  '#Technomancer',
+  '#Anubis',
+  '#Ayperos',
+  '#Divination',
+  '#Predictions'
+];
 const Twitter = new twit(config);
 
 function tweet(status) {
   return Twitter.post('statuses/update', {status: status})
     .then(({data}) => {
-      console.info(data)
+      const { created_at } = data;
+      console.info('Succesfully posted at', created_at);
     })
     .catch(err => {
       console.error(err)
@@ -31,8 +44,14 @@ function getPrediction() {
   return prediction;
 }
 
+function getPost() {
+  const prediction = getPrediction();
+  const post = prediction + '\n\n' + hashtags.join(' ');
+  return post;
+}
+
 function run() {
-  tweet(getPrediction());
+  tweet(getPost());
 }
 
 run();
