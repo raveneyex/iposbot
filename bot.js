@@ -26,15 +26,15 @@ const hashtags = [
 ];
 const Twitter = new twit(config);
 
-function tweet(status) {
-  return Twitter.post('statuses/update', {status: status})
-    .then(({data}) => {
-      const { created_at } = data;
-      console.info('Succesfully posted at', created_at);
-    })
-    .catch(err => {
-      console.error(err)
-    });
+async function tweet(status) {
+  try {
+    const promise = Twitter.post('statuses/update', {status});
+    const { data } = await promise;
+    const { created_at } = data;
+    console.log('Succesfully posted at', created_at);
+  } catch (err) {
+    console.err('Something went wrong:', err);
+  }
 }
 
 function getPrediction() {
