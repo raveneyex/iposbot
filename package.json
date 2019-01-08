@@ -4,8 +4,12 @@
   "description": "a small twitterbot to predict the general state of things in the world",
   "main": "bot.js",
   "scripts": {
+    "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "@raveneyex",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
 }
