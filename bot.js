@@ -8,7 +8,8 @@ const predictions = [
   'Todo lo que amas decaerá, te dejará, morirá, o todo lo anterior',
   'La llama de la pasión se extinguirá, tarde o temprano',
   'Criollombia seguirá siendo Criollombia',
-  'Uribe no vivirá por siempre, pero su legado vivirá mucho más que tú'
+  'Uribe no vivirá por siempre, pero su legado vivirá mucho más que tú',
+  'Millones han muerto; billones morirán'
 ];
 const Twitter = new twit(config);
 
