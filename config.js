@@ -7,8 +7,8 @@
  */
 
 module.exports = {
-  consumer_key: '8y4983492347',  
-  consumer_secret: 'dfdsfdsafadsfadsf',
-  access_token: '2344234234234-U57rwLKKpCWmSJc9THMhBPTU0dgzeP',  
-  access_token_secret: '23423423423dgdfsgdfg'
-}
+  consumer_key: process.env.API_KEY,  
+  consumer_secret: process.env.API_SECRET,
+  access_token: process.env.TOKEN,
+  access_token_secret: process.env.TOKEN_SECRET
+};
