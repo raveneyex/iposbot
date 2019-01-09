@@ -12,7 +12,7 @@ async function tweet(status) {
     const { created_at } = data;
     console.log('Succesfully posted at', created_at);
   } catch (err) {
-    console.err('Something went wrong:', err);
+    console.error('Something went wrong:', err);
   }
 }
 
