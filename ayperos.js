@@ -1,85 +1,76 @@
-require('dotenv').config();
-const twit = require('twit');
-const config = require('./config.js');
-const predictions_en = require('./predictions.english.json');
-const predictions_es = require('./predictions.spanish.json');
-const hashtags = require('./hashtags.json');
-const Twitter = new twit(config);
+/**
+ * Data-sources
+ */
+const subjects = require('./predictions/subjects.json');
+const actions = require('./predictions/actions.json');
+const endings = require('./predictions/endings.json');
+const hashtags = require('./predictions/hashtags.json');
 
-async function tweet(status) {
-  try {
-    const promise = Twitter.post('statuses/update', {status});
-    const { data } = await promise;
-    const { created_at } = data;
-    console.log(`Succesfully posted:\n${status}\nat ${created_at}\n--------`);
-  } catch (err) {
-    console.error('Something went wrong:', err);
-  }
-}
+/**
+ * Simple 2-digits DD/MM/YY format
+ */
+const dateFormat = {
+  day: '2-digit',
+  month: '2-digit',
+  year: '2-digit'
+};
 
-function getPrediction_ES() {
-  const timestamp = Date.now();
-  const random = timestamp % predictions_es.length;
-  const prediction = predictions_es[random];
-  return prediction;
-}
+/**
+ * Returns the current DD/MM/YY date.
+ * @param {String} locale. Defaults to `en-US`
+ */
+const getDate = (locale = 'en-US') => `${new Date(Date.now()).toLocaleDateString(locale, dateFormat)}`;
 
-function getPrediction_EN() {
-  const timestamp = Date.now();
-  const random = timestamp % predictions_en.length;
-  const prediction = predictions_en[random];
-  return prediction;
-}
+/**
+ * Returns the intro to the prediction
+ */
+const getIntro = () => `Prediction for ${getDate()}:\n\n`;
 
-function getDate(locale = 'en-US') {
-  const fullDate = new Date(Date.now());
-  const date = fullDate.toLocaleDateString(locale, {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit'
-  });
-  const hour = fullDate.toLocaleTimeString(locale);
-  const fullDateString = `${date} ${hour}`;
+/**
+ * Returns a random int between min and max
+ * @param {number} min
+ * @param {number} max 
+ */
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
 
-  return fullDateString;
-}
+/**
+ * Returns a random positive integer up to max
+ * @param {number} max
+ */
+const getPositiveInt = getRandomInt.bind(null, 0);
 
-function getIntro_ES() {
-  const date = getDate('es-CO');
-  return `Predicción para ${date}:`;
-}
+/**
+ * Given an array, return a random item from it
+ * @param {array} items 
+ */
+const getRandomItem = (items) => items[getPositiveInt(items.length)];
 
-function getIntro_EN() {
-  const date = getDate('en-US');
-  return `Prediction for ${date}:`;
-}
+/**
+ * Returns a random subject from the subjects json file
+ */
+const getSubject = () => getRandomItem(subjects);
 
-function getPost(locale) {
-  let intro,
-    prediction;
-  
-  if (locale === 'ES') {
-    intro = getIntro_ES;
-    prediction = getPrediction_ES;
-  } else {
-    intro = getIntro_EN;
-    prediction = getPrediction_EN;
-  }
-  
-  const post = intro() + '\n' + prediction() + `\n\n` + hashtags.join(' ');
-  return post;
-}
+/**
+ * Returns a random action from the actions json file
+ */
+const getAction = () => getRandomItem(actions);
 
-function postPredictions() {
-  tweet(getPost('ES'));
-  tweet(getPost('EN'));
-}
+/**
+ * Returns a random ending from the endings json file
+ */
+const getEnding = () => getRandomItem(endings);
 
-function run() {
-  postPredictions();
-  setInterval(() => {
-    postPredictions();
-  }, config.interval);
-}
+/**
+ * Returns the hashtags for a post
+ */
+const getHashtags = () => `\n\n` + hashtags.join(' ');
 
-module.exports = run;
+/**
+ * Returns a random prediction
+ */
+const getPrediction = () => `${getIntro()}${getSubject()} ${getAction()} ${getEnding()} ${getHashtags()}`; 
+
+/**
+ * Export fn to get a prediction
+ */
+module.exports = getPrediction;

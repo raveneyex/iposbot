@@ -11,5 +11,5 @@ module.exports = {
   consumer_secret: process.env.API_SECRET,
   access_token: process.env.TOKEN,
   access_token_secret: process.env.TOKEN_SECRET,
-  interval: 1800000
+  interval: 3600000
 };
