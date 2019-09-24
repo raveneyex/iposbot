@@ -1,22 +1,20 @@
 require('dotenv').config();
 
-const twit = require('twit');
 const config = require('./config.js');
 const ayperos = require('./ayperos.js');
-const Twitter = new twit(config);
 
-async function tweet(status) {
+async function makePredict(status) {
   try {
-    console.log("Length: ", status.length);
-    const promise = Twitter.post('statuses/update', {status});
-    const { data } = await promise;
-    const { created_at } = data;
-    console.log(`Succesfully posted:\n${status}\nat ${created_at}\n--------`);
+    var dateNow = new Date();
+    console.log("Length: ", status.length);    
+    
+    const created_at = dateNow.getDay()+"/"+(dateNow.getMonth()+1)+"/"+dateNow.getFullYear()
+    console.log(`Succesfully predict at:\n${status}\nat ${created_at}\n--------`);
   } catch (err) {
     console.error('Something went wrong:', err);
   }
 }
-const predict = () => tweet(ayperos());
+const predict = () => makePredict(ayperos());
 
 (function run() {
   predict();
